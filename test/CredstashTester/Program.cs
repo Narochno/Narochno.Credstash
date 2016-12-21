@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.KeyManagementService;
@@ -14,10 +15,11 @@ namespace CredstashTester
             var creds = new StoredProfileAWSCredentials();
             var stash = new Credstash(new CredstashOptions(), new AmazonKeyManagementServiceClient(creds, RegionEndpoint.EUWest1),
                 new AmazonDynamoDBClient(creds, RegionEndpoint.EUWest1));
-            //var val = stash.GetSecret("redis:host", null, new Dictionary<string, string>()
-            //{
-            //    { "environment", "beta"}
-            //}).Result;
+            var val = stash.GetSecret("redis:host", null, new Dictionary<string, string>()
+            {
+                { "environment", "beta"}
+            }).Result;
+            Console.WriteLine(val);
 
             foreach (var entry in stash.List().Result)
             {

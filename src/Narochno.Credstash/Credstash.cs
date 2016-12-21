@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.KeyManagementService;
 using Amazon.KeyManagementService.Model;
@@ -21,6 +22,7 @@ namespace Narochno.Credstash
         private readonly CredstashOptions options;
         private readonly IAmazonKeyManagementService amazonKeyManagementService;
         private readonly IAmazonDynamoDB amazonDynamoDb;
+        
 
         public Credstash(CredstashOptions options, IAmazonKeyManagementService amazonKeyManagementService, IAmazonDynamoDB amazonDynamoDb)
         {
@@ -80,11 +82,21 @@ namespace Narochno.Credstash
             var hmacKey = new byte[32];
             Buffer.BlockCopy(bytes, 0, key, 0, 32);
             Buffer.BlockCopy(bytes, 32, hmacKey, 0, 32);
-            //var hmac = new HMACSHA256();
-            //hmac.
+
+            var contents = Convert.FromBase64String(item.Contents);
+
+            var hmac = new HMACSHA256(hmacKey);
+            var result = hmac.ComputeHash(contents);
+            Console.WriteLine(item.Hmac);
+            Console.WriteLine(result.ToHexString());
+            if (!result.ToHexString().Equals(item.Hmac))
+            {
+                throw new CredstashException($"HMAC Failure for {item.Name} v{item.Version}");
+            }
+
             IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CTR/NoPadding");
             cipher.Init(false, new ParametersWithIV(ParameterUtilities.CreateKeyParameter("AES", key), INITIALIZATION_VECTOR));
-            byte[] plaintext = cipher.DoFinal(Convert.FromBase64String(item.Contents));
+            byte[] plaintext = cipher.DoFinal(contents);
             return Encoding.UTF8.GetString(plaintext);
         }
         

@@ -1,4 +1,5 @@
 # Narochno.Credstash
+
 C# Implementation of Credstash
 
 * Retrieve secrets for your applications in C#!
@@ -8,9 +9,14 @@ C# Implementation of Credstash
 
 CredStash is a very simple, easy to use credential management and distribution system that uses AWS Key Management Service (KMS) for key wrapping and master-key storage, and DynamoDB for credential storage and sharing.
 
-Many more details on the original [Credstash](https://github.com/fugue/credstash) in Python
+
+Many more details on the original:
+
+* [Intro Blog post](https://blog.fugue.co/2015-04-21-aws-kms-secrets.html)
+* [Credstash Repo](https://github.com/fugue/credstash) in Python
 
 ## Credstash vs Hashicorp Vault
+
 Reference: [Credstash](https://github.com/fugue/credstash/issues/60)
 
 Vault is really neat and they do some cool things (dynamic secret generation, key-splitting to protect master keys, etc.), but there are still some reasons why you might pick credstash over vault:

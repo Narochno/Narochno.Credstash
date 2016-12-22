@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,8 +86,7 @@ namespace Narochno.Credstash
 
             var hmac = new HMACSHA256(hmacKey);
             var result = hmac.ComputeHash(contents);
-            Console.WriteLine(item.Hmac);
-            Console.WriteLine(result.ToHexString());
+
             if (!result.ToHexString().Equals(item.Hmac))
             {
                 throw new CredstashException($"HMAC Failure for {item.Name} v{item.Version}");

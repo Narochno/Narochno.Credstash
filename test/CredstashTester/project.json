@@ -5,7 +5,7 @@
     "emitEntryPoint": true
   },
   "dependencies": {
-      "Narochno.Credstash" : {"target": "project"} 
+      "Narochno.Credstash.Configuration" : {"target": "project"} 
   },
   "frameworks": {
     "netcoreapp1.1": {

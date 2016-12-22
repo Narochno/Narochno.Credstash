@@ -277,3 +277,4 @@ __pycache__/
 tools/Cake.CoreCLR
 .vscode
 tools
+.dotnet

@@ -125,6 +125,7 @@ Task("Restore")
 });
 
 Task("Build")
+    .IsDependentOn("Restore")
     .Does(() =>
 {
     var settings = new DotNetCoreBuildSettings
@@ -145,6 +146,7 @@ Task("Build")
 });
 
 Task("Test")
+    .IsDependentOn("Build")
     .Does(() =>
 {  
     var settings = new DotNetCoreTestSettings
@@ -165,6 +167,7 @@ Task("Test")
 });
 
 Task("Pack")
+    .IsDependentOn("Test")
     .Does(() =>
 { 
     if (DirectoryExists(nupkgs))
@@ -186,9 +189,6 @@ Task("Pack")
 });
 
 Task("Publish")
-    .IsDependentOn("Restore")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test")
     .IsDependentOn("Pack")
     .Does(() =>
 {

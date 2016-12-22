@@ -7,9 +7,9 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Credstash", "src\N
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7BDC2D25-EED2-4B3D-B4D8-9DC0C3F9A0E5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CredstashTester", "test\CredstashTester\CredstashTester.xproj", "{886AF74A-73F4-48BD-8E23-2D18A834AC54}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CredstashTester", "misc\CredstashTester\CredstashTester.xproj", "{886AF74A-73F4-48BD-8E23-2D18A834AC54}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0A708342-7C8E-4915-90A5-D0C46A56FBCF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{0A708342-7C8E-4915-90A5-D0C46A56FBCF}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Credstash.Configuration", "src\Narochno.Credstash.Configuration\Narochno.Credstash.Configuration.xproj", "{260A9785-8389-4E72-A91D-0ED14DFBCB12}"
 EndProject

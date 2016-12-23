@@ -3,12 +3,13 @@
 C# Implementation of Credstash
 
 * Retrieve secrets for your applications in C#!
-* Use ASP.NET Core IConfiguration
+* ASP.NET Core IConfiguration provider.
+
+Intended use is with the Credstash command line tool.  Use CLI to enter your values.  Configuration Provider is used to retrieve.
 
 ## What is it?
 
 CredStash is a very simple, easy to use credential management and distribution system that uses AWS Key Management Service (KMS) for key wrapping and master-key storage, and DynamoDB for credential storage and sharing.
-
 
 Many more details on the original:
 

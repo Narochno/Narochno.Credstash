@@ -1,4 +1,4 @@
-# Narochno.Credstash
+# Narochno.Credstash [![Build status](https://ci.appveyor.com/api/projects/status/pqayx3gcxqlgpjsv/branch/master?svg=true)](https://ci.appveyor.com/project/Narochno/narochno-credstash/branch/master)
 
 C# Implementation of Credstash
 

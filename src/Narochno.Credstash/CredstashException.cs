@@ -8,5 +8,10 @@ namespace Narochno.Credstash
             : base(message)
         {
         }
+
+        public CredstashException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

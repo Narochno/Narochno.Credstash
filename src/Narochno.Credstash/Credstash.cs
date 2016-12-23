@@ -71,11 +71,25 @@ namespace Narochno.Credstash
                 item = CredstashItem.From(response.Item);
             }
 
-            var decryptResponse = await amazonKeyManagementService.DecryptAsync(new DecryptRequest()
+            DecryptResponse decryptResponse;
+            try
             {
-                CiphertextBlob = new MemoryStream(Convert.FromBase64String(item.Key)),
-                EncryptionContext = encryptionContext
-            });
+                decryptResponse = await amazonKeyManagementService.DecryptAsync(new DecryptRequest()
+                {
+                    CiphertextBlob = new MemoryStream(Convert.FromBase64String(item.Key)),
+                    EncryptionContext = encryptionContext
+                });
+            }
+            catch (InvalidCiphertextException e)
+            {
+                throw new CredstashException("Could not decrypt hmac key with KMS. The credential may " +
+                                             "require that an encryption context be provided to decrypt " +
+                                             "it.", e);
+            }
+            catch (Exception e)
+            {
+                throw new CredstashException("Decryption error", e);
+            }
             var bytes = decryptResponse.Plaintext.ToArray();
             var key = new byte[32];
             var hmacKey = new byte[32];

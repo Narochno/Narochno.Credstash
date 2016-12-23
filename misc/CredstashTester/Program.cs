@@ -32,10 +32,10 @@ namespace CredstashTester
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddCredstash(new CredstashConfigurationOptions()
             {
-                EncryptionContext = new Dictionary<string, string>()
-                {
-                    {"environment", "beta"}
-                }
+                //EncryptionContext = new Dictionary<string, string>()
+                //{
+                //    {"environment", "beta"}
+                //}
             });
 
             var config = configBuilder.Build();

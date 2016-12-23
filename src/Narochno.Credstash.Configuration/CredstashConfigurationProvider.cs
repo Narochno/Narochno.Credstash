@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +27,15 @@ namespace Narochno.Credstash.Configuration
             var data = new Dictionary<string, string>();
             foreach (var name in (await credstash.List()).Select(x => x.Name).Distinct())
             {
-                var value = await credstash.GetSecret(name, null, encryptionContext);
-                data.Add(name, value);
+                try
+                {
+                    var value = await credstash.GetSecret(name, null, encryptionContext);
+                    data.Add(name, value);
+                }
+                catch (Exception)
+                {
+                    //eat everything
+                }
             }
             return data;
         }

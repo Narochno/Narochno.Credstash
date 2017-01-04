@@ -7,6 +7,12 @@ C# Implementation of Credstash
 
 Intended use is with the Credstash command line tool.  Use CLI to enter your values.  Configuration Provider is used to retrieve.
 
+## TODO:
+
+* support more than assuming the HMAC is SHA256
+* Credstash class should do more than read?
+* Long term: web based tool to edit?!
+
 ## What is it?
 
 CredStash is a very simple, easy to use credential management and distribution system that uses AWS Key Management Service (KMS) for key wrapping and master-key storage, and DynamoDB for credential storage and sharing.

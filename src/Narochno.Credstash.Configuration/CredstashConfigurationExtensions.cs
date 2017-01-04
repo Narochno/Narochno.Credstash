@@ -6,7 +6,7 @@ namespace Narochno.Credstash.Configuration
 {
     public static class CredstashConfigurationExtensions
     {
-        public static void AddCredstash(this IConfigurationBuilder builder, CredstashConfigurationOptions options = null)
+        public static IConfigurationBuilder AddCredstash(this IConfigurationBuilder builder, CredstashConfigurationOptions options = null)
         {
             options = options ?? new CredstashConfigurationOptions();
 
@@ -18,6 +18,7 @@ namespace Narochno.Credstash.Configuration
                 new AmazonDynamoDBClient(options.Credentials, options.Region));
 
             builder.Add(new CredstashConfigurationSource(credstash, options.EncryptionContext));
+            return builder;
         }
     }
 }

@@ -8,6 +8,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.KeyManagementService;
 using Amazon.KeyManagementService.Model;
+using Narochno.Primitives;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
@@ -30,7 +31,7 @@ namespace Narochno.Credstash
             this.amazonDynamoDb = amazonDynamoDb;
         }
 
-        public async Task<string> GetSecret(string name, string version = null, Dictionary<string, string> encryptionContext = null)
+        public async Task<Optional<string>> GetSecret(string name, string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
         {
             CredstashItem item;
             if (version == null)
@@ -80,11 +81,15 @@ namespace Narochno.Credstash
                     EncryptionContext = encryptionContext
                 });
             }
-            catch (InvalidCiphertextException e)
+            catch (InvalidCiphertextException e) 
             {
-                throw new CredstashException("Could not decrypt hmac key with KMS. The credential may " +
-                                             "require that an encryption context be provided to decrypt " +
-                                             "it.", e);
+                if (throwOnInvalidCipherTextException)
+                {
+                    throw new CredstashException("Could not decrypt hmac key with KMS. The credential may " +
+                                                 "require that an encryption context be provided to decrypt " +
+                                                 "it.", e);
+                }
+                return new Optional<string>();
             }
             catch (Exception e)
             {

@@ -30,7 +30,7 @@ namespace Narochno.Credstash.Configuration
                 try
                 {
                     var value = await credstash.GetSecret(name, null, encryptionContext, false);
-                    if (value.IsSet)
+                    if (value.HasValue)
                     {
                         data.Add(name, value.Value);
                     }

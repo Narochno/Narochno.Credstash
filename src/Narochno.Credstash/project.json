@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-preview3",
+    "version": "1.0.0",
     "authors": [
         "adamhathcock"
     ],
@@ -12,7 +12,7 @@
     "dependencies": {
         "AWSSDK.DynamoDBv2": "3.3.1.4",
         "AWSSDK.KeyManagementService": "3.3.1.8",
-        "Narochno.Primitives": "1.5.0",
+        "Narochno.Primitives": "2.0.0",
         "Portable.BouncyCastle": "1.8.1.2"
     },
     "frameworks": {

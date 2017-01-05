@@ -29,18 +29,20 @@ namespace CredstashTester
             //    Console.WriteLine($"{entry.Name} v{entry.Version}");
             //}
 
+            AWSCredentials creds = new BasicAWSCredentials("AKIAIXEZ4YFASJQ7PRDA", "oKEwvnamB8FkKzp9jg/8rtm3nGtkkzI/5e2j7ewD");
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddCredstash(new CredstashConfigurationOptions()
+            configBuilder.AddCredstash(creds, new CredstashConfigurationOptions()
             {
-                //EncryptionContext = new Dictionary<string, string>()
-                //{
-                //    {"environment", "beta"}
-                //}
+                EncryptionContext = new Dictionary<string, string>()
+                {
+                    {"environment", "beta"}
+                }
             });
 
             var config = configBuilder.Build();
+            var beta = config.GetSection("beta");
 
-            Print(config, string.Empty);
+            Print(beta, string.Empty);
         }
 
         private static void Print(IConfiguration c, string prefix)

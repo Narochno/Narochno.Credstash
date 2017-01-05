@@ -29,7 +29,7 @@ namespace CredstashTester
             //    Console.WriteLine($"{entry.Name} v{entry.Version}");
             //}
 
-            AWSCredentials creds = new BasicAWSCredentials("AKIAIXEZ4YFASJQ7PRDA", "oKEwvnamB8FkKzp9jg/8rtm3nGtkkzI/5e2j7ewD");
+            AWSCredentials creds = new StoredProfileAWSCredentials();
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddCredstash(creds, new CredstashConfigurationOptions()
             {

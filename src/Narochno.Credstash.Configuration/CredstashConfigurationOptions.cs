@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Amazon;
-using Amazon.Runtime;
 
 namespace Narochno.Credstash.Configuration
 {
@@ -10,7 +9,5 @@ namespace Narochno.Credstash.Configuration
         public RegionEndpoint Region { get; set; } = RegionEndpoint.EUWest1;
 
         public Dictionary<string, string> EncryptionContext { get; set; }
-
-        public AWSCredentials Credentials { get; set; } = new StoredProfileAWSCredentials();
     }
 }

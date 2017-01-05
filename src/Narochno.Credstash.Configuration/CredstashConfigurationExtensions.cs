@@ -1,12 +1,14 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.KeyManagementService;
+using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 
 namespace Narochno.Credstash.Configuration
 {
     public static class CredstashConfigurationExtensions
     {
-        public static IConfigurationBuilder AddCredstash(this IConfigurationBuilder builder, CredstashConfigurationOptions options = null)
+        public static IConfigurationBuilder AddCredstash(this IConfigurationBuilder builder, AWSCredentials credentials, 
+            CredstashConfigurationOptions options = null)
         {
             options = options ?? new CredstashConfigurationOptions();
 
@@ -14,8 +16,8 @@ namespace Narochno.Credstash.Configuration
                 {
                     Region = options.Region,
                     Table = options.Table
-                }, new AmazonKeyManagementServiceClient(options.Credentials, options.Region),
-                new AmazonDynamoDBClient(options.Credentials, options.Region));
+                }, new AmazonKeyManagementServiceClient(credentials, options.Region),
+                new AmazonDynamoDBClient(credentials, options.Region));
 
             builder.Add(new CredstashConfigurationSource(credstash, options.EncryptionContext));
             return builder;

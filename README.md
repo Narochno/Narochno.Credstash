@@ -33,3 +33,21 @@ Vault is really neat and they do some cool things (dynamic secret generation, ke
 * Simple operations. Similar to "nothing to run", you dont need to worry about getting a quorum of admins together to unseal your master keys, dont need to worry about monitoring, runbooks for when the secret service goes down, etc. It does expose you to risk of AWS outages, but if you're running on AWS, you have that anyway
 
 That said, if you want to do master key splitting, are not running on AWS, care about things like dynamic secret generation, have a trust boundary that's smaller than an instance, or want to use something other than AWS creds for AuthN/AuthZ, then vault may be a better choice for you.
+
+## Usage
+
+``` csharp
+AWSCredentials creds = new StoredProfileAWSCredentials();
+if (!env.EnvironmentName.MatchesNoCase("alpha"))
+{
+    creds = new InstanceProfileAWSCredentials();
+}
+builder.AddCredstash(creds, new CredstashConfigurationOptions()
+{
+    EncryptionContext = new Dictionary<string, string>()
+    {
+        {"environment", env.EnvironmentName}
+    },
+    Region = RegionEndpoint.EUWest1
+});
+```

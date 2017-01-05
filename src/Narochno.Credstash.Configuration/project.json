@@ -1,5 +1,14 @@
 {
-    "version": "1.0.0-preview2",
+    "version": "1.0.0-preview3",
+    "authors": [
+        "adamhathcock"
+    ],
+    "packOptions": {
+        "tags": [
+            "credstash"
+        ],
+        "projectUrl": "https://github.com/Narochno/Narochno.Credstash"
+    },
     "dependencies": {
         "Microsoft.Extensions.Configuration": "1.1.0",
         "Narochno.Credstash": { "target": "project" }

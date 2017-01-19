@@ -14,12 +14,12 @@ namespace Narochno.Credstash
 
         public static CredstashItem From(Dictionary<string, AttributeValue> item)
         {
-            return new CredstashItem()
+            return new CredstashItem
             {
                 Name = item["name"].S,
                 Version = item["version"].S,
                 Contents = item["contents"].S,
-                Digest = item["digest"].S,
+                Digest = item.ContainsKey("digest") ? item["digest"].S : null,
                 Hmac = item["hmac"].S,
                 Key = item["key"].S,
             };

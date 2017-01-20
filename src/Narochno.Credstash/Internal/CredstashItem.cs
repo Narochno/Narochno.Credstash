@@ -21,7 +21,7 @@ namespace Narochno.Credstash.Internal
                 Name = item["name"].S,
                 Version = item["version"].S,
                 Contents = item["contents"].S,
-                Digest = item["digest"]?.S ?? DEFAULT_DIGEST,
+                Digest = (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DEFAULT_DIGEST,
                 Hmac = item["hmac"].S,
                 Key = item["key"].S,
             };

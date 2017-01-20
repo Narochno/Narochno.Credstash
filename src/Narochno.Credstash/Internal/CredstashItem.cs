@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Amazon.DynamoDBv2.Model;
 
-namespace Narochno.Credstash
+namespace Narochno.Credstash.Internal
 {
     public class CredstashItem
     {
+        public const string DEFAULT_DIGEST = "SHA256";
+
         public string Name { get; set; }
         public string Version { get; set; }
         public string Contents { get; set; }
@@ -19,7 +21,7 @@ namespace Narochno.Credstash
                 Name = item["name"].S,
                 Version = item["version"].S,
                 Contents = item["contents"].S,
-                Digest = item.ContainsKey("digest") ? item["digest"].S : null,
+                Digest = item["digest"]?.S ?? DEFAULT_DIGEST,
                 Hmac = item["hmac"].S,
                 Key = item["key"].S,
             };

@@ -8,6 +8,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.KeyManagementService;
 using Amazon.KeyManagementService.Model;
+using Narochno.Credstash.Internal;
 using Narochno.Primitives;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;

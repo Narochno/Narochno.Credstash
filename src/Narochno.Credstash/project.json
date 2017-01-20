@@ -1,21 +1,21 @@
-{
-    "version": "1.0.0",
-    "authors": [
-        "adamhathcock"
+﻿{
+  "version": "1.0.1",
+  "authors": [
+    "adamhathcock"
+  ],
+  "packOptions": {
+    "tags": [
+      "credstash"
     ],
-    "packOptions": {
-        "tags": [
-            "credstash"
-        ],
-        "projectUrl": "https://github.com/Narochno/Narochno.Credstash"
-    },
-    "dependencies": {
-        "AWSSDK.DynamoDBv2": "3.3.1.4",
-        "AWSSDK.KeyManagementService": "3.3.1.8",
-        "Narochno.Primitives": "2.0.0",
-        "Portable.BouncyCastle": "1.8.1.2"
-    },
-    "frameworks": {
-        "netstandard1.3": {}
-    }
+    "projectUrl": "https://github.com/Narochno/Narochno.Credstash"
+  },
+  "dependencies": {
+    "AWSSDK.DynamoDBv2": "3.3.1.4",
+    "AWSSDK.KeyManagementService": "3.3.1.8",
+    "Narochno.Primitives": "2.2.0",
+    "Portable.BouncyCastle": "1.8.1.2"
+  },
+  "frameworks": {
+    "netstandard1.3": {}
+  }
 }

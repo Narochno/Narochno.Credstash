@@ -22,9 +22,26 @@ namespace Narochno.Credstash.Internal
                 Version = item["version"].S,
                 Contents = item["contents"].S,
                 Digest = (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DEFAULT_DIGEST,
-                Hmac = item["hmac"].S,
+                Hmac = GetHmacString(item["hmac"]),
                 Key = item["key"].S,
             };
+        }
+
+        /// <summary>
+        /// Attempts to return the string value of the hmac value, if it exists. Otherwise
+        /// reads from the binary memory stream of the given value and returns the string
+        /// value of the stream.
+        /// </summary>
+        /// <param name="hmacValue"></param>
+        /// <returns></returns>
+        private static string GetHmacString(AttributeValue hmacValue)
+        {
+            if (!string.IsNullOrWhiteSpace(hmacValue.S))
+            {
+                return hmacValue.S;
+            }
+
+            return hmacValue.B != null ? new StreamReader(hmacValue.B).ReadToEnd() : null;
         }
     }
 }

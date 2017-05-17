@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Amazon.DynamoDBv2.Model;
+using System.IO;
 
 namespace Narochno.Credstash.Internal
 {

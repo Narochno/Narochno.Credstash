@@ -19,8 +19,8 @@ after_build:
 - dotnet pack "src\Narochno.Credstash.Configuration" -c Release
 
 artifacts:
-- path: src\Narochno.Primitives\bin\Release\*.nupkg
-- path: src\Narochno.Primitives.Json\bin\Release\*.nupkg
+- path: src\Narochno.Credstash\bin\Release\*.nupkg
+- path: src\Narochno.Credstash.Configuration\bin\Release\*.nupkg
 
 deploy:
 - provider: Environment

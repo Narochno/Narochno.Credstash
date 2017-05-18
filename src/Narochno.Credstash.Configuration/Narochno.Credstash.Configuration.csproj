@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.1.1</VersionPrefix>
     <Authors>adamhathcock</Authors>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>Narochno.Credstash.Configuration</AssemblyName>
     <PackageId>Narochno.Credstash.Configuration</PackageId>
     <PackageTags>credstash</PackageTags>

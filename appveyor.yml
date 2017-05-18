@@ -11,9 +11,6 @@ branches:
 nuget:
   disable_publish_on_pr: true
 
-init:
-- git config --global core.autocrlf true
-
 before_build:
   - cmd: dotnet restore
 

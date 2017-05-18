@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.1.4" />
     <PackageReference Include="AWSSDK.KeyManagementService" Version="3.3.1.8" />
-    <PackageReference Include="Narochno.Primitives" Version="2.2.0" />
+    <PackageReference Include="Narochno.Primitives" Version="2.6.6" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
   </ItemGroup>
 

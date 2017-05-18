@@ -6,7 +6,7 @@
     <AssemblyName>CredstashTester</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>CredstashTester</PackageId>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>

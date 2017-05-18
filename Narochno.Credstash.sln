@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Credstash", "src\Narochno.Credstash\Narochno.Credstash.xproj", "{DBE6C0EC-E043-43D1-B3A3-CE599500AD38}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7BDC2D25-EED2-4B3D-B4D8-9DC0C3F9A0E5}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CredstashTester", "misc\CredstashTester\CredstashTester.xproj", "{886AF74A-73F4-48BD-8E23-2D18A834AC54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{0A708342-7C8E-4915-90A5-D0C46A56FBCF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Narochno.Credstash.Configuration", "src\Narochno.Credstash.Configuration\Narochno.Credstash.Configuration.xproj", "{260A9785-8389-4E72-A91D-0ED14DFBCB12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Narochno.Credstash", "src\Narochno.Credstash\Narochno.Credstash.csproj", "{DBE6C0EC-E043-43D1-B3A3-CE599500AD38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CredstashTester", "misc\CredstashTester\CredstashTester.csproj", "{886AF74A-73F4-48BD-8E23-2D18A834AC54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Narochno.Credstash.Configuration", "src\Narochno.Credstash.Configuration\Narochno.Credstash.Configuration.csproj", "{260A9785-8389-4E72-A91D-0ED14DFBCB12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

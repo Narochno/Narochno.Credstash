@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.0.3</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>adamhathcock</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Narochno.Credstash</AssemblyName>
@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.1.4" />
     <PackageReference Include="AWSSDK.KeyManagementService" Version="3.3.1.8" />
-    <PackageReference Include="Narochno.Primitives" Version="2.2.0" />
+    <PackageReference Include="Narochno.Primitives" Version="2.6.6" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
   </ItemGroup>
 

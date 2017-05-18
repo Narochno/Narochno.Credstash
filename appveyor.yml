@@ -1,4 +1,5 @@
 version: '{build}'
+image: Visual Studio 2017
 
 pull_requests:
   do_not_increment_build_number: true
@@ -10,24 +11,20 @@ branches:
 nuget:
   disable_publish_on_pr: true
 
-init:
-- git config --global core.autocrlf true
+before_build:
+  - cmd: dotnet restore
 
-build_script:
-- ps: .\build.ps1
-
-test: off
-
-cache:
-- tools -> build.cake
-- tools -> build.ps1
+after_build:
+- dotnet pack "src\Narochno.Credstash" -c Release
+- dotnet pack "src\Narochno.Credstash.Configuration" -c Release
 
 artifacts:
-- path: nupkgs\*.nupkg
-  name: NuPkgs
+- path: src\Narochno.Primitives\bin\Release\*.nupkg
+- path: src\Narochno.Primitives.Json\bin\Release\*.nupkg
 
 deploy:
 - provider: Environment
   name: nuget.org
   on:
     branch: master
+    

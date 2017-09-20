@@ -20,17 +20,18 @@ namespace Narochno.Credstash
     {
         private static byte[] INITIALIZATION_VECTOR = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
-        private readonly CredstashOptions options;
         private readonly IAmazonKeyManagementService amazonKeyManagementService;
         private readonly IAmazonDynamoDB amazonDynamoDb;
 
 
         public Credstash(CredstashOptions options, IAmazonKeyManagementService amazonKeyManagementService, IAmazonDynamoDB amazonDynamoDb)
         {
-            this.options = options;
+            Options = options;
             this.amazonKeyManagementService = amazonKeyManagementService;
             this.amazonDynamoDb = amazonDynamoDb;
         }
+
+        public CredstashOptions Options { get; }
 
         public async Task<Optional<string>> GetSecretAsync(string name, string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
         {
@@ -39,7 +40,7 @@ namespace Narochno.Credstash
             {
                 var response = await amazonDynamoDb.QueryAsync(new QueryRequest()
                 {
-                    TableName = options.Table,
+                    TableName = Options.Table,
                     Limit = 1,
                     ScanIndexForward = false,
                     ConsistentRead = true,
@@ -63,7 +64,7 @@ namespace Narochno.Credstash
             {
                 var response = await amazonDynamoDb.GetItemAsync(new GetItemRequest()
                 {
-                    TableName = options.Table,
+                    TableName = Options.Table,
                     Key = new Dictionary<string, AttributeValue>()
                     {
                         { "name", new AttributeValue(name)},
@@ -122,7 +123,7 @@ namespace Narochno.Credstash
         {
             var response = await amazonDynamoDb.ScanAsync(new ScanRequest()
             {
-                TableName = options.Table,
+                TableName = Options.Table,
                 ProjectionExpression = "#N, version",
                 ExpressionAttributeNames = new Dictionary<string, string>()
                 {

@@ -9,11 +9,13 @@ namespace Narochno.Credstash.Configuration
     public class CredstashConfigurationProvider : ConfigurationProvider
     {
         private readonly Credstash credstash;
+        private readonly int dop;
         private readonly Dictionary<string, string> encryptionContext;
 
         public CredstashConfigurationProvider(Credstash credstash, Dictionary<string, string> encryptionContext)
         {
             this.credstash = credstash;
+            this.dop = credstash.Options.Dop;
             this.encryptionContext = encryptionContext;
         }
 
@@ -28,9 +30,9 @@ namespace Narochno.Credstash.Configuration
 
             var entries = (await credstash.ListAsync()).Select(x => x.Name).Distinct();
 
-            if (entries.Count() > 10)
+            if (entries.Count() > 10 && dop > 1)
             {
-                await entries.ForEachAsync(10, async entry =>
+                await entries.ForEachAsync(dop, async entry =>
                 {
                     await SetConfigValueAsync(data, entry).ConfigureAwait(false);
 

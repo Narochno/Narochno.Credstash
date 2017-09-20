@@ -18,17 +18,17 @@ namespace Narochno.Credstash
 {
     public class Credstash
     {
-        private static byte[] INITIALIZATION_VECTOR = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+        private static byte[] _initializationVector = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
-        private readonly IAmazonKeyManagementService amazonKeyManagementService;
-        private readonly IAmazonDynamoDB amazonDynamoDb;
+        private readonly IAmazonKeyManagementService _amazonKeyManagementService;
+        private readonly IAmazonDynamoDB _amazonDynamoDb;
 
 
         public Credstash(CredstashOptions options, IAmazonKeyManagementService amazonKeyManagementService, IAmazonDynamoDB amazonDynamoDb)
         {
             Options = options;
-            this.amazonKeyManagementService = amazonKeyManagementService;
-            this.amazonDynamoDb = amazonDynamoDb;
+            _amazonKeyManagementService = amazonKeyManagementService;
+            _amazonDynamoDb = amazonDynamoDb;
         }
 
         public CredstashOptions Options { get; }
@@ -38,7 +38,7 @@ namespace Narochno.Credstash
             CredstashItem item;
             if (version == null)
             {
-                var response = await amazonDynamoDb.QueryAsync(new QueryRequest()
+                var response = await _amazonDynamoDb.QueryAsync(new QueryRequest()
                 {
                     TableName = Options.Table,
                     Limit = 1,
@@ -62,7 +62,7 @@ namespace Narochno.Credstash
             }
             else
             {
-                var response = await amazonDynamoDb.GetItemAsync(new GetItemRequest()
+                var response = await _amazonDynamoDb.GetItemAsync(new GetItemRequest()
                 {
                     TableName = Options.Table,
                     Key = new Dictionary<string, AttributeValue>()
@@ -77,7 +77,7 @@ namespace Narochno.Credstash
             DecryptResponse decryptResponse;
             try
             {
-                decryptResponse = await amazonKeyManagementService.DecryptAsync(new DecryptRequest()
+                decryptResponse = await _amazonKeyManagementService.DecryptAsync(new DecryptRequest()
                 {
                     CiphertextBlob = new MemoryStream(Convert.FromBase64String(item.Key)),
                     EncryptionContext = encryptionContext
@@ -114,14 +114,14 @@ namespace Narochno.Credstash
             }
 
             IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CTR/NoPadding");
-            cipher.Init(false, new ParametersWithIV(ParameterUtilities.CreateKeyParameter("AES", key), INITIALIZATION_VECTOR));
+            cipher.Init(false, new ParametersWithIV(ParameterUtilities.CreateKeyParameter("AES", key), _initializationVector));
             byte[] plaintext = cipher.DoFinal(contents);
             return Encoding.UTF8.GetString(plaintext);
         }
        
         public async Task<List<CredstashEntry>> ListAsync()
         {
-            var response = await amazonDynamoDb.ScanAsync(new ScanRequest()
+            var response = await _amazonDynamoDb.ScanAsync(new ScanRequest()
             {
                 TableName = Options.Table,
                 ProjectionExpression = "#N, version",

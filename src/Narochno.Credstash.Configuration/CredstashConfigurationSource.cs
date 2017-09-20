@@ -5,18 +5,18 @@ namespace Narochno.Credstash.Configuration
 {
     public class CredstashConfigurationSource : IConfigurationSource
     {
-        private readonly Credstash credstash;
-        private readonly Dictionary<string, string> encryptionContext;
+        private readonly Credstash _credstash;
+        private readonly Dictionary<string, string> _encryptionContext;
 
         public CredstashConfigurationSource(Credstash credstash, Dictionary<string, string> encryptionContext)
         {
-            this.credstash = credstash;
-            this.encryptionContext = encryptionContext;
+            _credstash = credstash;
+            _encryptionContext = encryptionContext;
         }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new CredstashConfigurationProvider(credstash, encryptionContext);    
+            return new CredstashConfigurationProvider(_credstash, _encryptionContext);    
         }
     }
 }

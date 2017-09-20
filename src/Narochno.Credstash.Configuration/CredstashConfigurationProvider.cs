@@ -8,15 +8,15 @@ namespace Narochno.Credstash.Configuration
 {
     public class CredstashConfigurationProvider : ConfigurationProvider
     {
-        private readonly Credstash credstash;
-        private readonly int dop;
-        private readonly Dictionary<string, string> encryptionContext;
+        private readonly Credstash _credstash;
+        private readonly int _degreeOfParallelism;
+        private readonly Dictionary<string, string> _encryptionContext;
 
         public CredstashConfigurationProvider(Credstash credstash, Dictionary<string, string> encryptionContext)
         {
-            this.credstash = credstash;
-            this.dop = credstash.Options.Dop;
-            this.encryptionContext = encryptionContext;
+            _credstash = credstash;
+            _degreeOfParallelism = credstash.Options.DegreeOfParallelism;
+            _encryptionContext = encryptionContext;
         }
 
         public override void Load()
@@ -28,11 +28,11 @@ namespace Narochno.Credstash.Configuration
         {
             var data = new Dictionary<string, string>();
 
-            var entries = (await credstash.ListAsync()).Select(x => x.Name).Distinct();
+            var entries = (await _credstash.ListAsync()).Select(x => x.Name).Distinct().ToList();
 
-            if (entries.Count() > 10 && dop > 1)
+            if (entries.Count() > 10 && _degreeOfParallelism > 1)
             {
-                await entries.ForEachAsync(dop, async entry =>
+                await entries.ForEachAsync(_degreeOfParallelism, async entry =>
                 {
                     await SetConfigValueAsync(data, entry).ConfigureAwait(false);
 
@@ -53,7 +53,7 @@ namespace Narochno.Credstash.Configuration
         {
             try
             {
-                var secret = await credstash.GetSecretAsync(entry, null, encryptionContext, false).ConfigureAwait(false);
+                var secret = await _credstash.GetSecretAsync(entry, null, _encryptionContext, false).ConfigureAwait(false);
 
                 if (secret.HasValue)
                 {

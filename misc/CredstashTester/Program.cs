@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Amazon;
-using Amazon.DynamoDBv2;
-using Amazon.KeyManagementService;
 using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
-using Narochno.Credstash;
 using Narochno.Credstash.Configuration;
 
 namespace CredstashTester

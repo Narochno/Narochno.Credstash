@@ -23,6 +23,6 @@ namespace Narochno.Credstash.Configuration
         /// <summary>
         /// If the number of stored items are more than 10, you can decrypt them paralelly if this number if higher than 1. Dop marks the number of maximum parallel requests to DynamoDB and KMS. You need to make sure your read capacity unit is in place.
         /// </summary>
-        public int Dop { get; set; }
+        public int DegreeOfParallelism { get; set; } = 1;
     }
 }

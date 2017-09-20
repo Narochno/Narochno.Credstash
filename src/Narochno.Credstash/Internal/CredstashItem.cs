@@ -6,7 +6,7 @@ namespace Narochno.Credstash.Internal
 {
     public class CredstashItem
     {
-        public const string DEFAULT_DIGEST = "SHA256";
+        public const string DefaultDigest = "SHA256";
 
         public string Name { get; set; }
         public string Version { get; set; }
@@ -22,7 +22,7 @@ namespace Narochno.Credstash.Internal
                 Name = item["name"].S,
                 Version = item["version"].S,
                 Contents = item["contents"].S,
-                Digest = (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DEFAULT_DIGEST,
+                Digest = (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DefaultDigest,
                 Hmac = GetHmacString(item["hmac"]),
                 Key = item["key"].S,
             };

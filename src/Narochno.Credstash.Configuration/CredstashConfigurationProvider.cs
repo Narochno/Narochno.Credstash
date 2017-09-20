@@ -25,22 +25,43 @@ namespace Narochno.Credstash.Configuration
         public async Task<Dictionary<string, string>> LoadAsync()
         {
             var data = new Dictionary<string, string>();
-            foreach (var name in (await credstash.List()).Select(x => x.Name).Distinct())
+
+            var entries = (await credstash.ListAsync()).Select(x => x.Name).Distinct();
+
+            if (entries.Count() > 10)
             {
-                try
+                await entries.ForEachAsync(10, async entry =>
                 {
-                    var value = await credstash.GetSecret(name, null, encryptionContext, false);
-                    if (value.HasValue)
-                    {
-                        data.Add(name, value.Value);
-                    }
-                }
-                catch (Exception)
+                    await SetConfigValueAsync(data, entry).ConfigureAwait(false);
+
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                foreach (var entry in entries)
                 {
-                    //eat everything
+                    await SetConfigValueAsync(data, entry).ConfigureAwait(false);
                 }
             }
+
             return data;
+        }
+
+        private async Task SetConfigValueAsync(Dictionary<string, string> data, string entry)
+        {
+            try
+            {
+                var secret = await credstash.GetSecretAsync(entry, null, encryptionContext, false).ConfigureAwait(false);
+
+                if (secret.HasValue)
+                {
+                    data.Add(entry, secret.Value);
+                }
+            }
+            catch (Exception)
+            {
+                //eat everything
+            }
         }
     }
 }

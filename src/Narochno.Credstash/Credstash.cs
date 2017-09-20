@@ -23,7 +23,7 @@ namespace Narochno.Credstash
         private readonly CredstashOptions options;
         private readonly IAmazonKeyManagementService amazonKeyManagementService;
         private readonly IAmazonDynamoDB amazonDynamoDb;
-        
+
 
         public Credstash(CredstashOptions options, IAmazonKeyManagementService amazonKeyManagementService, IAmazonDynamoDB amazonDynamoDb)
         {
@@ -32,7 +32,7 @@ namespace Narochno.Credstash
             this.amazonDynamoDb = amazonDynamoDb;
         }
 
-        public async Task<Optional<string>> GetSecret(string name, string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
+        public async Task<Optional<string>> GetSecretAsync(string name, string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
         {
             CredstashItem item;
             if (version == null)
@@ -56,7 +56,7 @@ namespace Narochno.Credstash
                             }
                         }
                     }
-                });
+                }).ConfigureAwait(false);
                 item = CredstashItem.From(response.Items[0]);
             }
             else
@@ -69,7 +69,7 @@ namespace Narochno.Credstash
                         { "name", new AttributeValue(name)},
                         { "version", new AttributeValue(version)},
                     }
-                });
+                }).ConfigureAwait(false);
                 item = CredstashItem.From(response.Item);
             }
 
@@ -80,9 +80,9 @@ namespace Narochno.Credstash
                 {
                     CiphertextBlob = new MemoryStream(Convert.FromBase64String(item.Key)),
                     EncryptionContext = encryptionContext
-                });
+                }).ConfigureAwait(false);
             }
-            catch (InvalidCiphertextException e) 
+            catch (InvalidCiphertextException e)
             {
                 if (throwOnInvalidCipherTextException)
                 {
@@ -117,8 +117,8 @@ namespace Narochno.Credstash
             byte[] plaintext = cipher.DoFinal(contents);
             return Encoding.UTF8.GetString(plaintext);
         }
-        
-        public async Task<List<CredstashEntry>> List()
+       
+        public async Task<List<CredstashEntry>> ListAsync()
         {
             var response = await amazonDynamoDb.ScanAsync(new ScanRequest()
             {
@@ -128,13 +128,14 @@ namespace Narochno.Credstash
                 {
                     {"#N", "name"}
                 }
-            });
+            }).ConfigureAwait(false);
 
             var entries = new List<CredstashEntry>();
             foreach (var item in response.Items)
             {
                 entries.Add(new CredstashEntry(item["name"].S, item["version"].S));
             }
+
             return entries;
         }
     }

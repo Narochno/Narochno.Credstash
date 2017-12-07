@@ -16,9 +16,9 @@ using Org.BouncyCastle.Security;
 
 namespace Narochno.Credstash
 {
-    public class Credstash
+    public class Credstash : ICredstash
     {
-        private static byte[] _initializationVector = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+        private static readonly byte[] _initializationVector = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
         private readonly IAmazonKeyManagementService _amazonKeyManagementService;
         private readonly IAmazonDynamoDB _amazonDynamoDb;

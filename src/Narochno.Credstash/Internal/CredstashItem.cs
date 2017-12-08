@@ -17,6 +17,11 @@ namespace Narochno.Credstash.Internal
 
         public static CredstashItem From(Dictionary<string, AttributeValue> item)
         {
+            if (item == null || item.Count == 0)
+            {
+                return null;
+            }
+
             return new CredstashItem
             {
                 Name = item["name"].S,

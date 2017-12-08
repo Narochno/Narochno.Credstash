@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Amazon;
+using Amazon.DynamoDBv2;
+using Amazon.KeyManagementService;
 using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
+using Narochno.Credstash;
 using Narochno.Credstash.Configuration;
 
 namespace CredstashTester
@@ -10,6 +14,12 @@ namespace CredstashTester
     {
         public static void Main(string[] args)
         {
+            var stash = new Credstash(new CredstashOptions(), new AmazonKeyManagementServiceClient(RegionEndpoint.EUWest1),
+                   new AmazonDynamoDBClient(RegionEndpoint.EUWest1));
+
+            var noneExistingKey1 = stash.GetSecretAsync(Guid.NewGuid().ToString()).Result;
+            var noneExistingKey2 = stash.GetSecretAsync(Guid.NewGuid().ToString(), "1").Result;
+            
             //var creds = new StoredProfileAWSCredentials();
             //var stash = new Credstash(new CredstashOptions(), new AmazonKeyManagementServiceClient(creds, RegionEndpoint.EUWest1),
             //    new AmazonDynamoDBClient(creds, RegionEndpoint.EUWest1));

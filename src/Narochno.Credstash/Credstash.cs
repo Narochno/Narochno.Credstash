@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,8 @@ namespace Narochno.Credstash
                         }
                     }
                 }).ConfigureAwait(false);
-                item = CredstashItem.From(response.Items[0]);
+
+                item = CredstashItem.From(response.Items.FirstOrDefault());
             }
             else
             {
@@ -72,6 +74,11 @@ namespace Narochno.Credstash
                     }
                 }).ConfigureAwait(false);
                 item = CredstashItem.From(response.Item);
+            }
+
+            if (item == null)
+            {
+                return null;
             }
 
             DecryptResponse decryptResponse;

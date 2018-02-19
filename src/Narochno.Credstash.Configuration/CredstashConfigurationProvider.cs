@@ -11,12 +11,14 @@ namespace Narochno.Credstash.Configuration
         private readonly Credstash _credstash;
         private readonly int _degreeOfParallelism;
         private readonly Dictionary<string, string> _encryptionContext;
+        private readonly bool _suppressErrors;
 
         public CredstashConfigurationProvider(Credstash credstash, Dictionary<string, string> encryptionContext)
         {
             _credstash = credstash;
             _degreeOfParallelism = credstash.Options.DegreeOfParallelism;
             _encryptionContext = encryptionContext;
+            _suppressErrors = credstash.Options.SuppressErrors;
         }
 
         public override void Load()
@@ -60,9 +62,10 @@ namespace Narochno.Credstash.Configuration
                     data.Add(entry, secret.Value);
                 }
             }
-            catch (Exception)
+            catch
             {
-                //eat everything
+                if (!_suppressErrors)
+                    throw;
             }
         }
     }

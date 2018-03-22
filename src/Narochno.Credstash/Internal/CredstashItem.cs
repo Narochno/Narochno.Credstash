@@ -15,6 +15,16 @@ namespace Narochno.Credstash.Internal
         public string Hmac { get; set; }
         public string Key { get; set; }
 
+        public CredstashItem(string name, string version, string contents, string digest, string hmac, string key)
+        {
+            Name = name;
+            Version = version;
+            Contents = contents;
+            Digest = digest;
+            Hmac = hmac;
+            Key = key;
+        }
+
         public static CredstashItem From(Dictionary<string, AttributeValue> item)
         {
             if (item == null || item.Count == 0)
@@ -23,14 +33,32 @@ namespace Narochno.Credstash.Internal
             }
 
             return new CredstashItem
+            (
+                item["name"].S,
+                item["version"].S,
+                item["contents"].S,
+                (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DefaultDigest,
+                GetHmacString(item["hmac"]),
+                item["key"].S
+            );
+        }
+
+        public static Dictionary<string, AttributeValue> ToAttributeValueDict(CredstashItem item, int? expireEpoch = null)
+        {
+            var attributeDict = new Dictionary<string, AttributeValue>
             {
-                Name = item["name"].S,
-                Version = item["version"].S,
-                Contents = item["contents"].S,
-                Digest = (item.ContainsKey("digest") ? item["digest"]?.S : null) ?? DefaultDigest,
-                Hmac = GetHmacString(item["hmac"]),
-                Key = item["key"].S,
+                {"name", new AttributeValue(item.Name)},
+                {"version", new AttributeValue(item.Version)},
+                {"contents", new AttributeValue(item.Contents)},
+                {"digest", new AttributeValue(item.Digest)},
+                {"hmac", new AttributeValue(item.Hmac)},
+                {"key", new AttributeValue(item.Key)}
             };
+            if (expireEpoch.HasValue)
+            {
+                attributeDict["expires"] = new AttributeValue { N = expireEpoch.ToString() };
+            }
+            return attributeDict;
         }
 
         /// <summary>

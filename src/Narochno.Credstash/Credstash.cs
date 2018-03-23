@@ -20,6 +20,7 @@ namespace Narochno.Credstash
     public class Credstash : ICredstash
     {
         private static readonly byte[] _initializationVector = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+        private const int PADDING_LENGTH = 19;
 
         private readonly IAmazonKeyManagementService _amazonKeyManagementService;
         private readonly IAmazonDynamoDB _amazonDynamoDb;
@@ -125,7 +126,7 @@ namespace Narochno.Credstash
             byte[] plaintext = cipher.DoFinal(contents);
             return Encoding.UTF8.GetString(plaintext);
         }
-       
+        
         public async Task<List<CredstashEntry>> ListAsync()
         {
             var response = await _amazonDynamoDb.ScanAsync(new ScanRequest()
@@ -145,6 +146,113 @@ namespace Narochno.Credstash
             }
 
             return entries;
+        }
+
+        public async Task<IDictionary<string, Optional<string>>> GetAllAsync(string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
+        {
+            var secrets = await ListAsync();
+            var secretValueDict = new Dictionary<string, Optional<string>>();
+            foreach (var secret in secrets)
+            {
+                var secretValue = await GetSecretAsync(secret.Name, version, encryptionContext, throwOnInvalidCipherTextException);
+                if (secretValue.HasValue)
+                    secretValueDict[secret.Name] = secretValue;
+            }
+            return secretValueDict;
+        }
+
+        public async Task PutAsync(string name, string secret, string kmsKey = "alias/credstash", bool autoVersion = true, string versionArg = null, Dictionary<string, string> encryptionContext = null, int? expireEpoch = null)
+        {
+            var version = autoVersion ? IntWithPadding((await GetHighestVersion(name).ConfigureAwait(false) + 1).ToString()) : IntWithPadding(versionArg ?? string.Empty);
+            var keyDataResponse = await GenerateKeyData(kmsKey, encryptionContext).ConfigureAwait(false);
+            var encryptionResponse = SealAes(keyDataResponse, secret);
+
+            var key = Convert.ToBase64String(keyDataResponse.CiphertextBlob);
+            var contents = Convert.ToBase64String(encryptionResponse.CipherText);
+            var hmac = encryptionResponse.Hmac.ToHexString();
+
+            var credstashItem = new CredstashItem(name, version, contents, CredstashItem.DefaultDigest, hmac, key);
+
+            await _amazonDynamoDb.PutItemAsync(new PutItemRequest
+            {
+                Item = CredstashItem.ToAttributeValueDict(credstashItem, expireEpoch),
+                TableName = Options.Table,
+                ConditionExpression = "attribute_not_exists(#name)",
+                ExpressionAttributeNames = new Dictionary<string, string> { { "#name", "name" } }
+            }).ConfigureAwait(false);
+        }
+        
+        private async Task<KeyDataResponse> GenerateKeyData(string keyId, Dictionary<string, string> encryptionContext)
+        {
+            try
+            {
+                var kmsResponse = await _amazonKeyManagementService.GenerateDataKeyAsync(new GenerateDataKeyRequest
+                {
+                    EncryptionContext = encryptionContext,
+                    KeyId = keyId,
+                    NumberOfBytes = 64
+                }).ConfigureAwait(false);
+
+                return new KeyDataResponse
+                {
+                    CiphertextBlob = kmsResponse.CiphertextBlob.ToArray(),
+                    Plaintext = kmsResponse.Plaintext.ToArray()
+                };
+            }
+            catch (Exception e)
+            {
+                throw new CredstashException("Encryption Key Generation error", e);
+            }
+        }
+
+        private EncryptionResponse SealAes(KeyDataResponse keyDataResponse, string secret)
+        {
+            var plainText = Encoding.UTF8.GetBytes(secret);
+            var bytes = keyDataResponse.Plaintext.ToArray();
+            var dataKey = new byte[32];
+            var hmacKey = new byte[32];
+            Buffer.BlockCopy(bytes, 0, dataKey, 0, 32);
+            Buffer.BlockCopy(bytes, 32, hmacKey, 0, 32);
+            
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CTR/NoPadding");
+            cipher.Init(true, new ParametersWithIV(ParameterUtilities.CreateKeyParameter("AES", dataKey), _initializationVector));
+            var cipherText = cipher.DoFinal(plainText);
+
+            var hmac = new HMACSHA256(hmacKey);
+            var hmacResult = hmac.ComputeHash(cipherText);
+
+            return new EncryptionResponse
+            {
+                CipherText = cipherText,
+                Hmac = hmacResult
+            };
+        }
+
+        private async Task<int> GetHighestVersion(string name)
+        {
+            var response = await _amazonDynamoDb.QueryAsync(new QueryRequest
+            {
+                TableName = Options.Table,
+                Limit = 1,
+                ScanIndexForward = false,
+                ConsistentRead = true,
+                KeyConditionExpression = "#name = :v_name",
+                ExpressionAttributeNames = new Dictionary<string, string> { { "#name", "name" } },
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue> { { ":v_name", new AttributeValue(name) } },
+                ProjectionExpression = "version"
+            }).ConfigureAwait(false);
+            if (!response.Items.Any())
+            {
+                return 0;
+            }
+            return response.Items.First().TryGetValue("version", out var versionValue)
+                ? int.TryParse(versionValue.S, out var version) ? version : 0
+                : 0;
+        }
+
+        private static string IntWithPadding(string version)
+        {
+            return version.PadLeft(PADDING_LENGTH, '0');
         }
     }
 }

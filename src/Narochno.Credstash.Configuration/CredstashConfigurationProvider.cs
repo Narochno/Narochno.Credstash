@@ -30,7 +30,7 @@ namespace Narochno.Credstash.Configuration
         {
             var data = new Dictionary<string, string>();
 
-            var entries = (await _credstash.ListAsync()).Select(x => x.Name).Distinct().ToList();
+            var entries = (await _credstash.ListAsync().ConfigureAwait(false)).Select(x => x.Name).Distinct().ToList();
 
             if (entries.Count() > 10 && _degreeOfParallelism > 1)
             {

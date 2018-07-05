@@ -150,11 +150,11 @@ namespace Narochno.Credstash
 
         public async Task<IDictionary<string, Optional<string>>> GetAllAsync(string version = null, Dictionary<string, string> encryptionContext = null, bool throwOnInvalidCipherTextException = true)
         {
-            var secrets = await ListAsync();
+            var secrets = await ListAsync().ConfigureAwait(false);
             var secretValueDict = new Dictionary<string, Optional<string>>();
             foreach (var secret in secrets)
             {
-                var secretValue = await GetSecretAsync(secret.Name, version, encryptionContext, throwOnInvalidCipherTextException);
+                var secretValue = await GetSecretAsync(secret.Name, version, encryptionContext, throwOnInvalidCipherTextException).ConfigureAwait(false);
                 if (secretValue.HasValue)
                     secretValueDict[secret.Name] = secretValue;
             }
@@ -205,7 +205,7 @@ namespace Narochno.Credstash
             }
         }
 
-        private EncryptionResponse SealAes(KeyDataResponse keyDataResponse, string secret)
+        private static EncryptionResponse SealAes(KeyDataResponse keyDataResponse, string secret)
         {
             var plainText = Encoding.UTF8.GetBytes(secret);
             var bytes = keyDataResponse.Plaintext.ToArray();

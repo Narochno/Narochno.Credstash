@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,13 +26,13 @@ namespace Narochno.Credstash.Configuration
             Data = LoadAsync().Result;
         }
 
-        public async Task<Dictionary<string, string>> LoadAsync()
+        public async Task<IDictionary<string, string>> LoadAsync()
         {
-            var data = new Dictionary<string, string>();
+            var data = new ConcurrentDictionary<string, string>();
 
             var entries = (await _credstash.ListAsync().ConfigureAwait(false)).Select(x => x.Name).Distinct().ToList();
 
-            if (entries.Count() > 10 && _degreeOfParallelism > 1)
+            if (entries.Count > 10 && _degreeOfParallelism > 1)
             {
                 await entries.ForEachAsync(_degreeOfParallelism, async entry =>
                 {
@@ -51,7 +51,7 @@ namespace Narochno.Credstash.Configuration
             return data;
         }
 
-        private async Task SetConfigValueAsync(Dictionary<string, string> data, string entry)
+        private async Task SetConfigValueAsync(ConcurrentDictionary<string, string> data, string entry)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Narochno.Credstash.Configuration
 
                 if (secret.HasValue)
                 {
-                    data.Add(entry, secret.Value);
+                    data.TryAdd(entry, secret.Value);
                 }
             }
             catch
